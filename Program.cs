@@ -2,46 +2,61 @@
 {
     static void Main(string[] args)
     {
+         // CADASTRO DOS USUÁRIOS: aqui criamos objetos concretos (Cliente e Tecnico)
         Cliente cliente = new Cliente(
-            "Davilla",
-            "davillavictoria4@gmail.com",
-            1,
-            "123456",
-            "RH"
+           nome: "Davilla",
+           email: "davillavictoria@gmail.com",
+           id: 1,
+           senha: "senha123",
+           setor: "Financeiro"
         );
 
         Tecnico tecnico = new Tecnico(
-            "Caio",
-            "caiosilva@gmail.com",
-            2,
-            "654321",
-            "Suporte"
+            nome: "Kaio",
+            email: "kaio@gmail.com",
+            id: 2,
+            senha: "tec456",
+            especialidade: "Redes"
         );
 
+        //CRIAÇÃO DA CATEGORIA
         Categoria categoria = new Categoria(
-            1,
-            "Hardware",
-            "Problemas físicos no computador"
+           id: 1,
+           nome: "Suporte Técnico",
+           descricao: "Problemas relacionados a hardware e software"
         );
 
+       //CLIENTE ABRE UM CHAMADO
         Chamado chamado = new Chamado(
-        1,
-        "PC não liga",
-        "O computador não dá sinal",
-        cliente,
-        categoria,
-        NivelChamado.Alto
+        id: 100,
+        titulo: "Computador não liga",
+        descricao: "O computador não liga ao apertar o botão",
+        cliente: cliente,
+        categoria: categoria,
+        nivel: NivelChamado.Alto
     );
-
+        // TÉCNICO É ATRIBUÍDO AO CHAMADO
         ChamadoService service = new ChamadoService();
 
-        service.AbrirChamado(chamado);
-        service.AtribuirTecnico(chamado, tecnico);
-        service.EncerrarChamado(chamado);
+        // Regra de negócio sendo aplicada pelo Service
+        chamadoService.AbrirChamado(chamado);
+        chamadoService.AtribuirTecnico(chamado, tecnico);
 
-        Console.WriteLine("Chamado encerrado!");
-        Console.WriteLine("Status: " + chamado.Status);
+        Console.WriteLine("Técnico atribuído ao chamado.");
+        Console.WriteLine($"Status atual: {chamado.Status}");
 
+        //CHAMADO É ENCERRADO
+        chamadoService.EncerrarChamado(chamado);
+
+        Console.WriteLine("Chamado encerrado.");
+        Console.WriteLine($"Status final: {chamado.Status}");
+
+        // EXIBIR HISTÓRICO DO CHAMADO
+         Console.WriteLine("\nHistórico do chamado:");
+        foreach (var h in chamado.Historico)
+        {
+            Console.WriteLine($"{h.Data} - {h.Descricao}");
+        }
 
     }
 }
