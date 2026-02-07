@@ -1,61 +1,53 @@
 using System.Collections.Generic;
 
-
+// Classe que representa um chamado no sistema
 public class Chamado
 {
-    //Atributos básicos
-    public int Id {get; private set;}
-    public string Titulo {get; private set;}
-    public string Descricao { get; private set;}
+    // Atributos básicos do chamado
+    public int Id { get; private set; }           
+    public string Titulo { get; private set; }    
+    public string Descricao { get; private set; } 
 
+    // Enumerações
+    public StatusChamado Status { get; private set; } // Status atual do chamado 
+    public NivelChamado Nivel { get; private set; }   // Nível de prioridade do chamado (Baixo, Médio, Alto)
 
- //enum
-    public StatusChamado Status {get; private set;}
-    public NivelChamado Nivel {get; private set;}
+    // Relacionamento com outras classes (associação)
+    public Cliente Cliente { get; private set; }       // Cliente que abriu o chamado
+    public Tecnico? Tecnico { get; private set; }      // Técnico responsável, opcional inicialmente (null)
+    public Categoria Categoria { get; private set; }  
 
+    public List<HistoricoChamado> Historico { get; private set; }
 
- //Relacionamento de outras classes
-    public Cliente Cliente {get; private set;}
-    public Tecnico? Tecnico {get; private set;}  //A propriedade não anulável 'Tecnico' precisa conter um valor não nulo
-
-    public Categoria Categoria {get; private set;}
-
-
-    //Histórico
-    public List<HistoricoChamado> Historico {get; private set;}
-
-
+    // Construtor da classe Chamado
     public Chamado(int id, string titulo, string descricao, Cliente cliente, Categoria categoria, NivelChamado nivel)
     {
-     Id = id;
-    Titulo = titulo;
-    Descricao = descricao;
-    Cliente = cliente;
-    Categoria = categoria;
-    Nivel = nivel;
-    Status = StatusChamado.Aberto;
-    Historico = new List<HistoricoChamado>();
+        Id = id;
+        Titulo = titulo;
+        Descricao = descricao;
+        Cliente = cliente;
+        Categoria = categoria;
+        Nivel = nivel;
+
+        Status = StatusChamado.Aberto; // Status inicial sempre aberto
+        Historico = new List<HistoricoChamado>(); // Lista vazia de histórico
     }
 
-
+    // Método para atribuir um técnico ao chamado
     public void AtribuirTecnico(Tecnico tecnico)
     {
         // Só atribui técnico se ainda não tiver um
-        if(Tecnico == null)
+        if (Tecnico == null)
         {
-            Tecnico = tecnico;
-            Status = StatusChamado.EmAndamento;
-            Historico.Add(new HistoricoChamado("Técnico atribuído."));
+            Tecnico = tecnico;                  
+            Status = StatusChamado.EmAndamento;  // Atualiza status para EmAndamento
+            Historico.Add(new HistoricoChamado("Técnico atribuído.")); // Registra ação no histórico
         }
     }
 
-
     public void EncerrarChamado()
     {
-        Status = StatusChamado.Encerrado;
-        Historico.Add(new HistoricoChamado("Chamado encerrado."));
+        Status = StatusChamado.Encerrado;            // Atualiza status para Encerrado
+        Historico.Add(new HistoricoChamado("Chamado encerrado.")); // Registra ação no histórico
     }
-
-
- 
 }
